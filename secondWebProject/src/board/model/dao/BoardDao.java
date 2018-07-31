@@ -178,9 +178,39 @@ public class BoardDao {
 		return board;
 	}
 
-	public int insertBoard(Connection con, Board board) {
-		// TODO Auto-generated method stub
-		return 0;
+	//원글 등록용 메소드
+	public int insertBoard(Connection con, 
+			Board board) throws BoardException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		String query = "insert into board values "
+				+ "((select max(board_num) + 1 from board), "
+				+ "?, ?, ?, ?, ?, sysdate, 0, "
+				+ "(select max(board_num) + 1 from board), "
+				+ "null, default, default)";	
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, board.getBoardTitle());
+			pstmt.setString(2, board.getBoardWriter());
+			pstmt.setString(3, board.getBoardContent());
+			pstmt.setString(4, board.getBoardOriginalFileName());
+			pstmt.setString(5, board.getBoardRenameFileName());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result <= 0)
+				throw new BoardException("새 원글 등록 실패!");			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BoardException(e.getMessage());
+		}finally{
+			close(pstmt);
+		}		
+		
+		return result;
 	}
 
 	public int deleteBoard(Connection con, int boardNum) {
