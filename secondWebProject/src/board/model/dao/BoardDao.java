@@ -213,9 +213,31 @@ public class BoardDao {
 		return result;
 	}
 
-	public int deleteBoard(Connection con, int boardNum) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteBoard(Connection con, 
+			int boardNum) throws BoardException{
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		String query = "delete from board "
+				+ "where board_num = ?";
+		
+		try {
+			pstmt = con.prepareStatement(query);
+			pstmt.setInt(1, boardNum);
+			
+			result = pstmt.executeUpdate();
+			
+			if(result <= 0)
+				throw new BoardException("게시글 삭제 실패!");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new BoardException(e.getMessage());
+		}finally{
+			close(pstmt);
+		}
+		
+		return result;
 	}
 
 	public int insertReply(Connection con, Board originBoard, Board replyBoard) {
