@@ -1,5 +1,6 @@
 package board.controller;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import board.exception.BoardException;
 import board.model.service.BoardService;
+import board.model.vo.Board;
 
 /**
  * Servlet implementation class BoardDeleteServlet
@@ -37,7 +39,21 @@ public class BoardDeleteServlet extends HttpServlet {
 		
 		RequestDispatcher view = null;
 		try {
-			if(new BoardService().deleteBoard(boardNum) > 0){
+			BoardService bservice = new BoardService();
+			Board board = bservice.selectBoard(boardNum);
+			
+			if(bservice.deleteBoard(boardNum) > 0){
+				//삭제 성공시, 첨부파일이 있을 경우
+				//bupfiles 폴더에 해당 파일 삭제 처리함
+				if(board.getBoardOriginalFileName() != null){
+					String savePath = request.getSession()
+						.getServletContext().getRealPath(
+								"/bupfiles");
+					File removeFile = new File(savePath + 
+						"\\" + board.getBoardRenameFileName());
+					removeFile.delete();
+				}			
+				
 				response.sendRedirect("/second/blist");
 			}else{
 				view = request.getRequestDispatcher(
