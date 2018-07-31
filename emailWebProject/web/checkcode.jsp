@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!-- 비교하면 찾아짐 -->
+<!-- 두번째 비교해보세요 -->
 <html>
 <head>
 <meta charset="UTF-8">
