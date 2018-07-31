@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<!-- 비교하면 찾아짐 -->
 <html>
 <head>
 <meta charset="UTF-8">
